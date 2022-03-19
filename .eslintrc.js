@@ -3,7 +3,12 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb-typescript', 'prettier'],
+  extends: [
+    'plugin:react/recommended',
+    'airbnb-typescript',
+    'plugin:react/jsx-runtime',
+    'prettier',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -20,6 +25,7 @@ module.exports = {
       'error',
       {
         devDependencies: [
+          'src/setupTests.ts',
           '**/*.stories.tsx',
           '**/*.test.ts',
           '**/*.test.tsx',
@@ -28,6 +34,7 @@ module.exports = {
         ],
       },
     ],
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
     /**
      * Avoid enforcing a defaultProps definition for every prop that
      * is not required. Preferred method is default value in function arguments.
