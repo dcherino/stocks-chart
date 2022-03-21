@@ -1,57 +1,68 @@
-// import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useMemo } from 'react';
-import get from '../../services/apiService/apiService';
+import {
+  DataGrid,
+  GridColDef,
+  GridSelectionModel,
+  GridToolbar,
+} from '@mui/x-data-grid';
+import { useMemo, useState } from 'react';
 
-// const columns: GridColDef[] = [
-//   {
-//     field: 'id',
-//     headerName: 'ID',
-//     width: 90,
-//   },
-//   {
-//     field: 'description',
-//     headerName: 'Name',
-//     width: 150,
-//     editable: true,
-//   },
-//   {
-//     field: 'symbol',
-//     headerName: 'Symbol',
-//     width: 150,
-//     editable: true,
-//   },
-//   {
-//     field: 'type',
-//     headerName: 'Type',
-//     width: 110,
-//     editable: true,
-//   },
-//   {
-//     field: 'currency',
-//     headerName: 'Currency',
-//     width: 160,
-//   },
-// ];
-
-// const test = [
-//   {
-//     id: 'test',
-//     description: 'test',
-//     symbol: 'test',
-//     type: 'test',
-//     currency: 'test',
-//   },
-// ];
+const columns: GridColDef[] = [
+  {
+    field: 'id',
+    headerName: 'ID',
+    width: 90,
+    filterable: true,
+    flex: 0,
+  },
+  {
+    field: 'description',
+    headerName: 'Name',
+    width: 350,
+    filterable: true,
+    flex: 1,
+  },
+  {
+    field: 'symbol',
+    headerName: 'Symbol',
+    width: 150,
+    filterable: true,
+    flex: 0,
+  },
+  {
+    field: 'type',
+    headerName: 'Type',
+    width: 110,
+    editable: true,
+    flex: 0,
+  },
+  {
+    field: 'currency',
+    headerName: 'Currency',
+    width: 160,
+    flex: 0,
+  },
+];
 
 type StocksListProps = {
   stocks: StocksResponse[];
+  loading: boolean;
+  error: boolean;
+  selectStock: (symbol: string[]) => void;
 };
 
 interface StocksData extends StocksResponse {
   id: string;
 }
 
-const StocksList = ({ stocks }: StocksListProps) => {
+const StocksList = ({
+  stocks,
+  loading,
+  error,
+  selectStock,
+}: StocksListProps) => {
+  const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+  const [warning, setWarning] = useState<string>('');
+
   const formattedStocks: StocksData[] = useMemo(() => {
     const newData = [];
     for (let i = 0; i < stocks.length; i += 1) {
@@ -60,33 +71,45 @@ const StocksList = ({ stocks }: StocksListProps) => {
 
     return newData;
   }, [stocks]);
+  console.log(error);
+  // const handleClick = useMemo((symbol: string) => {
+  //   if (stocksSelected.length < 3) {
+  //     const newStocksSelected: string[] = [...stocksSelected, symbol];
+  //     selectStock(newStocksSelected);
+  //   }
+  // }, []);
+  console.log(selectStock);
 
-  const handleClick = (symbol: string): void => {
-    get(
-      `/stock/candle?symbol=${symbol}&resolution=D&from=1572651390&to=1575243390`
-    );
+  const handleSelectionModel = (newSelectionModel: GridSelectionModel) => {
+    setWarning('');
+    if (newSelectionModel.length <= 3) {
+      setSelectionModel(newSelectionModel);
+    } else {
+      setWarning('Maximum of 3 stocks selected at the same time');
+    }
   };
+
   return (
     <div style={{ height: 500, width: '100%' }}>
-      {
-        formattedStocks &&
-          formattedStocks.map(
-            (stock, index) =>
-              index < 10 && (
-                <button type="button" onClick={() => handleClick(stock.symbol)}>
-                  {stock.description}
-                </button>
-              )
-          )
-        // <DataGrid
-        //   rows={test}
-        //   columns={columns}
-        //   pageSize={100}
-        //   rowsPerPageOptions={[5]}
-        //   checkboxSelection
-        //   disableSelectionOnClick
-        // />
-      }
+      {formattedStocks && (
+        <>
+          <DataGrid
+            rows={formattedStocks}
+            columns={columns}
+            components={{ Toolbar: GridToolbar }}
+            pageSize={100}
+            rowsPerPageOptions={[100, 200, 300, 500, 1000]}
+            loading={loading}
+            checkboxSelection
+            disableSelectionOnClick
+            onSelectionModelChange={(newSelectionModel) =>
+              handleSelectionModel(newSelectionModel)
+            }
+            selectionModel={selectionModel}
+          />
+          {warning && <p>{warning}</p>}
+        </>
+      )}
     </div>
   );
 };

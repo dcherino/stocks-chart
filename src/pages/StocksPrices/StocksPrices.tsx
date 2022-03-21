@@ -16,16 +16,31 @@ const Chart = (): JSX.Element => {
     }
     setLoading(false);
   };
+
   useEffect(() => {
     getStocks('/stock/symbol?exchange=US');
   }, []);
 
+  const selectStock = async (symbol: string[]) => {
+    const stockData = await get(
+      `/stock/candle?symbol=${symbol}&resolution=D&from=1572651390&to=1575243390`
+    );
+    console.log(stockData);
+  };
+
   return (
-    <div>
+    <div style={{ width: '70%', margin: '0 auto' }}>
       <h1>Chart</h1>
-      {loading && <p>Loading...</p>}
-      {!loading && !hasError && <StocksList stocks={results} />}
-      {!loading && hasError && <p>Opps! There was a problem...</p>}
+      {/* {loading && <p>Loading...</p>}
+      {!loading && !hasError && ( */}
+      <StocksList
+        stocks={results}
+        selectStock={selectStock}
+        loading={loading}
+        error={hasError}
+      />
+      {/* )}
+      {!loading && hasError && <p>Opps! There was a problem...</p>} */}
     </div>
   );
 };
