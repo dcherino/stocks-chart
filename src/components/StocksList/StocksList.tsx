@@ -4,7 +4,7 @@ import {
   GridSelectionModel,
   GridToolbar,
 } from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 const columns: GridColDef[] = [
   {
@@ -47,12 +47,8 @@ type StocksListProps = {
   stocks: StocksResponse[];
   loading: boolean;
   error: boolean;
-  selectStock: (symbol: string[]) => void;
+  selectStock: (symbol: GridSelectionModel) => void;
 };
-
-interface StocksData extends StocksResponse {
-  id: string;
-}
 
 const StocksList = ({
   stocks,
@@ -63,27 +59,13 @@ const StocksList = ({
   const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
   const [warning, setWarning] = useState<string>('');
 
-  const formattedStocks: StocksData[] = useMemo(() => {
-    const newData = [];
-    for (let i = 0; i < stocks.length; i += 1) {
-      newData.push({ ...stocks[i], id: stocks[i].symbol });
-    }
-
-    return newData;
-  }, [stocks]);
   console.log(error);
-  // const handleClick = useMemo((symbol: string) => {
-  //   if (stocksSelected.length < 3) {
-  //     const newStocksSelected: string[] = [...stocksSelected, symbol];
-  //     selectStock(newStocksSelected);
-  //   }
-  // }, []);
-  console.log(selectStock);
 
   const handleSelectionModel = (newSelectionModel: GridSelectionModel) => {
     setWarning('');
     if (newSelectionModel.length <= 3) {
       setSelectionModel(newSelectionModel);
+      selectStock(newSelectionModel);
     } else {
       setWarning('Maximum of 3 stocks selected at the same time');
     }
@@ -91,10 +73,10 @@ const StocksList = ({
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      {formattedStocks && (
+      {stocks && (
         <>
           <DataGrid
-            rows={formattedStocks}
+            rows={stocks}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
             pageSize={100}
