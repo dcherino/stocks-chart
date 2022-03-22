@@ -7,10 +7,9 @@ const createAxiosInstance = (url: string): AxiosInstance =>
     params: {
       token: process.env.REACT_APP_API_KEY,
     },
-    // headers: { 'X-Finnhub-Token': process.env.REACT_APP_API_KEY as string },
   });
 
-const get = async <T>(url: string): Promise<T> => {
+export const get = async <T>(url: string): Promise<T> => {
   const instance = createAxiosInstance(url);
   const result = await instance.get<T>(url);
   if (result.status !== 200) {
@@ -21,4 +20,9 @@ const get = async <T>(url: string): Promise<T> => {
   return result.data;
 };
 
-export default get;
+export const getCandles = async (symbol: string, from: number, to: number) => {
+  const response: StocksCandleResponse = await get(
+    `/stock/candle?symbol=${symbol}&resolution=D&from=${from}&to=${to}`
+  );
+  return response;
+};

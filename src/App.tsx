@@ -1,4 +1,6 @@
 import { ThemeProvider } from 'styled-components';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import GlobalStyle from './globalStyle';
 import theme from './theme';
 import { AppWrap, Header, Main, Footer } from './App.styles';
@@ -13,7 +15,9 @@ function App() {
           <h1>Schroders</h1>
         </Header>
         <Main>
-          <StocksPrices />
+          <LocalizationProvider dateAdapter={DateAdapter}>
+            <StocksPrices />
+          </LocalizationProvider>
         </Main>
         <Footer>
           <p>

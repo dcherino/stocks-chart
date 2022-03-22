@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-import get from './apiService';
+import { get } from './apiService';
 
 describe('API service tests', () => {
   it('returns data when http response 200', async () => {

@@ -1,4 +1,4 @@
-import { getUnixTime } from './getUnixTime';
+import { getUnixTime } from '../getUnixTime';
 
 describe('getUnixTime helper', () => {
   it('returns unix timestamp', () => {

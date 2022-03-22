@@ -38,7 +38,7 @@ export const Header = styled.header`
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: ${({ theme }) => theme.palette.primary.text};
+  color: ${({ theme }) => theme.palette.primary.contrastText};
 `;
 
 export const Main = styled.main`
@@ -56,10 +56,10 @@ export const Footer = styled.footer`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.palette.secondary.main};
-  color: ${({ theme }) => theme.palette.secondary.text};
+  color: ${({ theme }) => theme.palette.secondary.contrastText};
 
   a {
-    color: ${({ theme }) => theme.palette.secondary.text};
+    color: ${({ theme }) => theme.palette.secondary.contrastText};
   }
 
   a:hover {

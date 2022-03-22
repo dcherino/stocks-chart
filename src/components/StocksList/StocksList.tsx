@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   DataGrid,
   GridColDef,
@@ -46,20 +47,12 @@ const columns: GridColDef[] = [
 type StocksListProps = {
   stocks: StocksResponse[];
   loading: boolean;
-  error: boolean;
   selectStock: (symbol: GridSelectionModel) => void;
 };
 
-const StocksList = ({
-  stocks,
-  loading,
-  error,
-  selectStock,
-}: StocksListProps) => {
+const StocksList = ({ stocks, loading, selectStock }: StocksListProps) => {
   const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
   const [warning, setWarning] = useState<string>('');
-
-  console.log(error);
 
   const handleSelectionModel = (newSelectionModel: GridSelectionModel) => {
     setWarning('');
@@ -72,7 +65,7 @@ const StocksList = ({
   };
 
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div style={{ height: 500, width: '100%', marginTop: '50px' }}>
       {stocks && (
         <>
           <DataGrid
