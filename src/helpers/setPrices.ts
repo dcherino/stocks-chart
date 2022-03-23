@@ -28,7 +28,7 @@ export const setPricesObject = (
       if (newPricesObj[priceType].find((el: ChartData) => el.date === date)) {
         newPricesObj[priceType].push({
           ...newPricesObj[priceType][index],
-          [symbol]: response[initial][index].toFixed(2),
+          [symbol]: response[initial][index],
         });
         return;
       }

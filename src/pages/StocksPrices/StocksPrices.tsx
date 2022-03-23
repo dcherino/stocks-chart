@@ -57,40 +57,41 @@ const StockPrices = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    selectedStocks.forEach(async (symbol) => {
+    let o = { open: [{}], close: [{}], high: [{}], low: [{}] };
+    selectedStocks.forEach(async (symbol, idx) => {
       try {
         const candles = await getCandles(symbol as string, from, to);
         const d = setPricesObject(symbol as string, candles) as PricesObj;
 
-        const o = { ...prices };
-
         const open = d.open.map((item, index) => ({
-          ...item,
           ...o.open[index],
+          ...item,
         }));
         const close = d.close.map((item, index) => ({
-          ...item,
           ...o.close[index],
+          ...item,
         }));
         const high = d.high.map((item, index) => ({
-          ...item,
           ...o.high[index],
+          ...item,
         }));
         const low = d.low.map((item, index) => ({
-          ...item,
           ...o.low[index],
+          ...item,
         }));
 
-        const newObj = {
+        o = {
           open,
           close,
           high,
           low,
         };
-
-        setPrices({ ...newObj });
       } catch (error) {
         console.log(error);
+      }
+      if (idx === selectedStocks.length - 1) {
+        console.log(o);
+        setPrices({ ...o });
       }
     });
   }, [from, to]);
@@ -154,7 +155,8 @@ const StockPrices = (): JSX.Element => {
           setFrom(getUnixTime(newValue as Date));
         }}
         renderInput={(params) => (
-          <TextField helperText={params?.inputProps?.placeholder} />
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          <TextField {...params} helperText={params?.inputProps?.placeholder} />
         )}
       />
       <DatePicker
@@ -165,7 +167,8 @@ const StockPrices = (): JSX.Element => {
           setTo(getUnixTime(newValue as Date));
         }}
         renderInput={(params) => (
-          <TextField helperText={params?.inputProps?.placeholder} />
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          <TextField {...params} helperText={params?.inputProps?.placeholder} />
         )}
       />
 
