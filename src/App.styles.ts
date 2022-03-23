@@ -1,13 +1,4 @@
-import styled, { keyframes } from 'styled-components';
-
-const logoSpin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
+import styled from 'styled-components';
 
 export const AppWrap = styled.div`
   display: grid;
@@ -19,34 +10,29 @@ export const AppWrap = styled.div`
     'Header'
     'Main'
     'Footer';
-
-  .logo {
-    height: 40vmin;
-    pointer-events: none;
-
-    @media (prefers-reduced-motion: no-preference) {
-      animation: ${logoSpin} infinite 20s linear;
-    }
-  }
-`;
-
-export const Header = styled.header`
-  grid-area: Header;
-  background-color: ${({ theme }) => theme.palette.primary.main};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: ${({ theme }) => theme.palette.primary.contrastText};
 `;
 
 export const Main = styled.main`
   grid-area: Main;
+  background: #efefef;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+export const PagesWrapper = styled.div`
+  max-width: 900px;
+  width: 100%;
+  background: #fff;
+  padding: 20px 40px;
+  margin-top: 20px;
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    color: ${({ theme }) => theme.palette.primary.main};
+    font-size: 32px;
+  }
 `;
 
 export const Footer = styled.footer`

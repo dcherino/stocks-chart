@@ -2,6 +2,7 @@
   "name": "stocks-chart",
   "version": "0.1.0",
   "private": true,
+  "homepage": "schroders",
   "dependencies": {
     "@date-io/date-fns": "^2.13.1",
     "@mui/lab": "^5.0.0-alpha.74",

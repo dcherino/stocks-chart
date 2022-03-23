@@ -1,16 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/jsx-props-no-spreading */
 import { useEffect, useState } from 'react';
 import { GridSelectionModel } from '@mui/x-data-grid';
-import TextField from '@mui/material/TextField';
-import DatePicker from '@mui/lab/DatePicker';
 import StocksList from '../../components/StocksList/StocksList';
 import Chart from '../../components/Chart/Chart';
 import { getUnixTime } from '../../helpers/getUnixTime';
 import { get, getCandles } from '../../services/apiService/apiService';
 import { setPricesObject } from '../../helpers/setPrices';
+import DateRange from '../../components/DateRange/DateRange';
 
 const today: number = getUnixTime(new Date());
-const year: number = getUnixTime(new Date('2022-02-22'));
+const initialFrom: number = getUnixTime(new Date('2022-02-22'));
 const initialPrices = {
   open: [{}],
   close: [{}],
@@ -24,7 +23,7 @@ const StockPrices = (): JSX.Element => {
   const [results, setResults] = useState<StocksResponse[]>([]);
   const [selectedStocks, setSelectedStocks] = useState<GridSelectionModel>([]);
 
-  const [from, setFrom] = useState(year);
+  const [from, setFrom] = useState(initialFrom);
   const [to, setTo] = useState(today);
 
   const [prices, setPrices] = useState<any>(initialPrices);
@@ -90,7 +89,6 @@ const StockPrices = (): JSX.Element => {
         console.log(error);
       }
       if (idx === selectedStocks.length - 1) {
-        console.log(o);
         setPrices({ ...o });
       }
     });
@@ -145,32 +143,10 @@ const StockPrices = (): JSX.Element => {
   };
 
   return (
-    <div style={{ width: '70%', margin: '0 auto' }}>
-      <h1>Chart</h1>
-      <DatePicker
-        label="From"
-        value={new Date(from * 1000)}
-        inputFormat="dd/MM/yyyy"
-        onChange={(newValue) => {
-          setFrom(getUnixTime(newValue as Date));
-        }}
-        renderInput={(params) => (
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          <TextField {...params} helperText={params?.inputProps?.placeholder} />
-        )}
-      />
-      <DatePicker
-        label="To"
-        value={new Date(to * 1000)}
-        inputFormat="dd/MM/yyyy"
-        onChange={(newValue) => {
-          setTo(getUnixTime(newValue as Date));
-        }}
-        renderInput={(params) => (
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          <TextField {...params} helperText={params?.inputProps?.placeholder} />
-        )}
-      />
+    <div style={{ margin: '0 auto' }}>
+      <h3>US Stock Exchange</h3>
+
+      <DateRange from={from} to={to} setFrom={setFrom} setTo={setTo} />
 
       <Chart prices={prices} selectedStocks={selectedStocks as string[]} />
 

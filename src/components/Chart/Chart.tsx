@@ -1,5 +1,3 @@
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import { useState } from 'react';
 import {
   LineChart,
@@ -12,6 +10,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import theme from '../../theme';
+import PricesButtons from '../PricesButtons/PricesButtons';
+import { Message, Wrapper } from './Chart.styles';
 
 type PricesData = {
   [key: string]: object[];
@@ -30,29 +30,18 @@ const Chart = ({ prices, selectedStocks }: ChartProps): JSX.Element => {
   };
 
   return (
-    <div style={{ height: '500px', position: 'relative' }}>
+    <Wrapper>
       {selectedStocks.length <= 0 && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            padding: '20px',
-            background: '#efefef',
-            display: 'flex',
-            justifyContent: 'center',
-            alignContent: 'center',
-          }}
-        >
+        <Message>
           <p>Please select at least one item from the list below</p>
-        </div>
+        </Message>
       )}
 
       <ResponsiveContainer
         width="100%"
         height="100%"
         minHeight="500px"
+        minWidth="800px"
         key={Math.random()}
       >
         <LineChart
@@ -62,8 +51,8 @@ const Chart = ({ prices, selectedStocks }: ChartProps): JSX.Element => {
           data={prices[priceSelected]}
           margin={{
             top: 5,
-            right: 30,
-            left: 20,
+            right: 0,
+            left: 0,
             bottom: 30,
           }}
         >
@@ -100,41 +89,8 @@ const Chart = ({ prices, selectedStocks }: ChartProps): JSX.Element => {
         </LineChart>
       </ResponsiveContainer>
 
-      <ButtonGroup
-        size="large"
-        variant="contained"
-        aria-label="large button group"
-      >
-        <Button
-          key="open"
-          color={priceSelected === 'open' ? 'info' : 'primary'}
-          onClick={() => handleClick('open')}
-        >
-          Open
-        </Button>
-        <Button
-          key="close"
-          color={priceSelected === 'close' ? 'info' : 'primary'}
-          onClick={() => handleClick('close')}
-        >
-          Close
-        </Button>
-        <Button
-          key="high"
-          color={priceSelected === 'high' ? 'info' : 'primary'}
-          onClick={() => handleClick('high')}
-        >
-          High
-        </Button>
-        <Button
-          key="low"
-          color={priceSelected === 'low' ? 'info' : 'primary'}
-          onClick={() => handleClick('low')}
-        >
-          Low
-        </Button>
-      </ButtonGroup>
-    </div>
+      <PricesButtons priceSelected={priceSelected} handleClick={handleClick} />
+    </Wrapper>
   );
 };
 
