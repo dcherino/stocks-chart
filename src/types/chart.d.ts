@@ -17,6 +17,7 @@ type ChartData = {
 };
 
 type PricesObj = {
+  [key: string]: ChartData[];
   open: ChartData[];
   close: ChartData[];
   high: ChartData[];

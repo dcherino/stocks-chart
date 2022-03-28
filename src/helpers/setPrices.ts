@@ -20,7 +20,7 @@ export const setPricesObject = (
 
   const priceTypes = Object.keys(newPricesObj);
 
-  priceTypes.map((priceType) =>
+  priceTypes.map((priceType: string) =>
     response.t.forEach((timestamp: number, index: number) => {
       const date = formatTime(timestamp);
 

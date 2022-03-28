@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useState } from 'react';
 import {
   DataGrid,
   GridColDef,
   GridSelectionModel,
   GridToolbar,
 } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { Wrapper, Warning } from './StocksList.styles';
 
 const columns: GridColDef[] = [
   {
@@ -65,7 +65,8 @@ const StocksList = ({ stocks, loading, selectStock }: StocksListProps) => {
   };
 
   return (
-    <div style={{ height: 500, width: '100%', marginTop: '50px' }}>
+    <Wrapper>
+      {warning && <Warning>{warning}</Warning>}
       {stocks && (
         <>
           <DataGrid
@@ -82,10 +83,9 @@ const StocksList = ({ stocks, loading, selectStock }: StocksListProps) => {
             }
             selectionModel={selectionModel}
           />
-          {warning && <p>{warning}</p>}
         </>
       )}
-    </div>
+    </Wrapper>
   );
 };
 

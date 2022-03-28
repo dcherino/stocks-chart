@@ -10,6 +10,7 @@ import DateRange from '../../components/DateRange/DateRange';
 
 const today: number = getUnixTime(new Date());
 const initialFrom: number = getUnixTime(new Date('2022-02-22'));
+
 const initialPrices = {
   open: [{}],
   close: [{}],
@@ -36,13 +37,8 @@ const StockPrices = (): JSX.Element => {
     try {
       const response: StocksResponse[] = await get(url);
 
-      const shapedData = (): StocksData[] => {
-        const data = [];
-        for (let index = 0; index < response.length; index += 1) {
-          data.push({ ...response[index], id: response[index].symbol });
-        }
-        return data;
-      };
+      const shapedData = (): StocksData[] =>
+        response.map((stock) => ({ ...stock, id: stock.symbol }));
 
       setResults(shapedData());
     } catch (error) {
@@ -55,41 +51,25 @@ const StockPrices = (): JSX.Element => {
     getStocks('/stock/symbol?exchange=US');
   }, []);
 
+  const setPriceObject = (obj: PricesObj) => {
+    const o: PricesObj = { ...prices };
+    Object.keys(obj).forEach((key) => {
+      o[key] = obj[key].map((item: ChartData, index: number) => ({
+        ...o[key][index],
+        ...item,
+      }));
+    });
+    setPrices({ ...o });
+  };
+
   useEffect(() => {
-    let o = { open: [{}], close: [{}], high: [{}], low: [{}] };
-    selectedStocks.forEach(async (symbol, idx) => {
+    selectedStocks.forEach(async (symbol) => {
       try {
         const candles = await getCandles(symbol as string, from, to);
         const d = setPricesObject(symbol as string, candles) as PricesObj;
-
-        const open = d.open.map((item, index) => ({
-          ...o.open[index],
-          ...item,
-        }));
-        const close = d.close.map((item, index) => ({
-          ...o.close[index],
-          ...item,
-        }));
-        const high = d.high.map((item, index) => ({
-          ...o.high[index],
-          ...item,
-        }));
-        const low = d.low.map((item, index) => ({
-          ...o.low[index],
-          ...item,
-        }));
-
-        o = {
-          open,
-          close,
-          high,
-          low,
-        };
+        setPriceObject(d);
       } catch (error) {
         console.log(error);
-      }
-      if (idx === selectedStocks.length - 1) {
-        setPrices({ ...o });
       }
     });
   }, [from, to]);
@@ -106,34 +86,7 @@ const StockPrices = (): JSX.Element => {
           difference[0] as string,
           candles
         ) as PricesObj;
-
-        const o = { ...prices };
-
-        const open = d.open.map((item, index) => ({
-          ...item,
-          ...o.open[index],
-        }));
-        const close = d.close.map((item, index) => ({
-          ...item,
-          ...o.close[index],
-        }));
-        const high = d.high.map((item, index) => ({
-          ...item,
-          ...o.high[index],
-        }));
-        const low = d.low.map((item, index) => ({
-          ...item,
-          ...o.low[index],
-        }));
-
-        const newObj = {
-          open,
-          close,
-          high,
-          low,
-        };
-
-        setPrices({ ...newObj });
+        setPriceObject(d);
       } catch (error) {
         console.log(error);
       }
